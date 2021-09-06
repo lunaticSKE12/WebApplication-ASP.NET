@@ -11,15 +11,7 @@ namespace WebApplication1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (ReadCookie() >= 15)
-            {
-                // Server.Transfer("Member.aspx");
-                Response.Redirect("Member.aspx");
-            }
-            else
-            {
-                Response.Write("Error !!");
-            }
+            CheckAge(int.Parse(Request.Cookies["UserSetting"].Value));
         }
 
         protected void Button1_Click(object sender, EventArgs e)
@@ -27,7 +19,14 @@ namespace WebApplication1
             int years = DateTime.Now.Year;
             int age = years - int.Parse(txtYears.Text);
             WriteCookie(age);
-            if (ReadCookie() >= 15)
+            CheckAge(int.Parse(Request.Cookies["UserSetting"].Value));
+
+
+        }
+
+        private void CheckAge(int age)
+        {
+            if (age >= 15)
             {
                 // Server.Transfer("Member.aspx");
                 Response.Redirect("Member.aspx");
