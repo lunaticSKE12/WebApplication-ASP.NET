@@ -11,15 +11,18 @@ namespace WebApplication1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            CheckAge(int.Parse(Request.Cookies["UserSetting"].Value));
+            CheckAge(ReadSession());
+            //CheckAge(int.Parse(Request.Cookies["UserSetting"].Value));
         }
 
         protected void Button1_Click(object sender, EventArgs e)
         {
             int years = DateTime.Now.Year;
             int age = years - int.Parse(txtYears.Text);
-            WriteCookie(age);
-            CheckAge(int.Parse(Request.Cookies["UserSetting"].Value));
+            WriteSession(age);
+            CheckAge(ReadSession());
+            //WriteCookie(age);
+            //CheckAge(int.Parse(Request.Cookies["UserSetting"].Value));
 
 
         }
@@ -37,13 +40,27 @@ namespace WebApplication1
             }
         }
 
+        private void WriteSession(int age)
+        {
+            Session["userAge"] = age;
+        }
+
+        private int ReadSession()
+        {
+            if(Session["userAge"] == null)
+            {
+                return 0;
+            }
+            return int.Parse(Session["userAge"].ToString());
+        }
+
         private void WriteCookie(int age)
         {
             HttpCookie userCookie = new HttpCookie("UserSetting");
             userCookie.Value = age.ToString();
             userCookie.Expires = DateTime.Now.AddDays(3d);
             Response.Cookies.Add(userCookie);
-        }
+        } 
 
 
         private int ReadCookie()
